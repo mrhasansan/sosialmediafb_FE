@@ -8,12 +8,10 @@ import { HiUserGroup } from "react-icons/hi";
 import { BiStore, BiLike, BiShare, BiChat } from "react-icons/bi";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { RiVideoAddFill } from "react-icons/ri";
-import Navbar from "../components/Navbar";
 
 function Landing() {
   return (
     <>
-      <Navbar />
       <Row className="mx-3 p-5">
         <Col md="3" style={{ background: "#F0F2F5", height: "1000px" }}>
           <ul className="list-unstyled mx-3">

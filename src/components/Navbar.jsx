@@ -8,15 +8,27 @@ import { BiStore } from "react-icons/bi";
 import { FaUsers, FaFacebookMessenger } from "react-icons/fa";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { MdNotificationsNone } from "react-icons/md";
-import { Avatar } from "@chakra-ui/react";
+import { Avatar, Spinner } from "@chakra-ui/react";
+import { logoutAction } from "../actions/userAction";
+import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 
-function Navbar() {
+function Navbar(props) {
+  const dispatch = useDispatch();
+
+  const { username } = useSelector((state) => {
+    return {
+      username: state.userReducer.username,
+    };
+  });
   return (
     <div>
       <Nav className="d-flex justify-content-between fixed-top" style={{ background: "#FFFFFF" }}>
+        {props.loading ? <Spinner /> : username && !props.loading}
         <NavItem>
           <NavLink active href="#">
             <BsFacebook size={28} />
+            {username}
           </NavLink>
         </NavItem>
         <NavItem>

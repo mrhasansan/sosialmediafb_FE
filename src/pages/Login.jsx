@@ -2,19 +2,16 @@ import React from "react";
 import { Col, Row, Label, Input, Button, DropdownItem, InputGroup, InputGroupText } from "reactstrap";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { useState } from "react";
-import { FormControl, FormLabel, FormHelperText, FormErrorMessage, Tooltip } from "@chakra-ui/react";
 import { API_URL } from "../helper";
 import Axios from "axios";
+import { loginAction } from "../actions/userAction";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 
 function Login() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [inputusername, setInputUsername] = useState("");
+  const [inputpassword, setInputPassword] = useState("");
   const [visible, setVisible] = useState("password");
-
-  const isError = username === "";
-  const onBtnLogin = () => {
-    alert(`password ${password} dan username ${username}`);
-  };
 
   const onVisibility = () => {
     if (visible == "password") {
@@ -22,6 +19,28 @@ function Login() {
     } else if (visible == "text") {
       setVisible("password");
     }
+  };
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const onBtnLogin = () => {
+    Axios.post(API_URL + `/users/login`, {
+      username: inputusername,
+      password: inputpassword,
+    })
+      .then((response) => {
+        console.log(response.data);
+        dispatch(loginAction(response.data));
+        localStorage.setItem("socialmediafb", response.data.token);
+        navigate("/", { replace: true });
+      })
+      .catch((error) => {
+        if (!error.response.data.success) {
+          alert(error.response.data.message);
+        }
+        console.log("check error", error);
+      });
   };
   return (
     <Row style={{ background: "#F0F2F5" }} className="m-3 p-4 ">
@@ -32,12 +51,11 @@ function Login() {
         <p className="h4"> Facebook helps you connect and share with the people in your life.</p>
       </Col>
       <Col xs="12" md="6" style={{ background: "#FFFFFF" }} className="rounded">
-        <FormControl>
-          <Input placeholder="input username" type="text" md={4} className="my-3" onChange={(e) => setUsername(e.target.value)} />
-          {!isError ? <FormHelperText>Enter the email you'd like to receive the newsletter on.</FormHelperText> : <FormErrorMessage>Email is required.</FormErrorMessage>}
-        </FormControl>
         <InputGroup>
-          <Input placeholder=" input password" type={visible} md={4} onChange={(e) => setPassword(e.target.value)} />
+          <Input md={4} placeholder="input username" type="text" className="my-3" onChange={(e) => setInputUsername(e.target.value)} />
+        </InputGroup>
+        <InputGroup>
+          <Input placeholder="input password" type={visible} md={4} onChange={(e) => setInputPassword(e.target.value)} />
           <InputGroupText className="bg-transparent " onClick={onVisibility}>
             {visible == "password" ? <AiOutlineEye size={26} /> : <AiOutlineEyeInvisible size={26} />}
           </InputGroupText>
@@ -52,7 +70,9 @@ function Login() {
         </Col>
 
         <Col className="justify-content-center my-3 ">
-          <Button style={{ background: "#192D71" }}>Create new account</Button>
+          <Link to="/register">
+            <Button style={{ background: "#192D71" }}>Create new account</Button>
+          </Link>
         </Col>
       </Col>
     </Row>

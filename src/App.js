@@ -3,14 +3,53 @@ import "./App.css";
 import Login from "./pages/Login";
 import Landing from "./pages/Landing";
 import Register from "./pages/Register";
+import { API_URL } from "./helper";
+import { useDispatch } from "react-redux";
+import { loginAction } from "./actions/userAction";
+import { useEffect, useState } from "react";
+import Navbar from "../src/components/Navbar";
+import Axios from "axios";
+import VerificationPage from "./pages/VerificationPage";
 
 function App() {
+  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+
+  const keepLogin = () => {
+    let getLocalStorage = localStorage.getItem("socialmediafb");
+    console.log(getLocalStorage);
+    if (getLocalStorage) {
+      Axios.get(API_URL + `/users/keep`, {
+        headers: {
+          Authorization: `Bearer ${getLocalStorage}`,
+        },
+      })
+        .then((res) => {
+          dispatch(loginAction(res.data));
+          setLoading(false);
+          localStorage.setItem("socialmediafb", res.data.token);
+        })
+        .catch((err) => {
+          console.log(err);
+          setLoading(false);
+        });
+      // loading dimatikan ketika berhasil mendapatkan respon
+    } else {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    keepLogin();
+  }, []);
+
   return (
     <div className="App">
+      <Navbar loading={loading} />
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/verification" element={<VerificationPage />} />
       </Routes>
     </div>
   );
