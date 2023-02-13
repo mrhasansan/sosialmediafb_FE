@@ -10,7 +10,9 @@ import { useEffect, useState } from "react";
 import Navbar from "../src/components/Navbar";
 import Axios from "axios";
 import VerificationPage from "./pages/VerificationPage";
-
+import Profil from "./pages/Profil";
+import Content from "./pages/Content";
+import Home from "./pages/Home";
 function App() {
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
@@ -44,12 +46,14 @@ function App() {
 
   return (
     <div className="App">
-      <Navbar loading={loading} />
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/profile" element={<Profil />} />
         <Route path="/verification" element={<VerificationPage />} />
+        <Route path="/content" element={<Content />} />
+        <Route path="/home" element={<Home />} />
       </Routes>
     </div>
   );
