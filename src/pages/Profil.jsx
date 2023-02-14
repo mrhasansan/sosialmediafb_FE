@@ -1,15 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Avatar, Button, Container, Divider, Input, InputGroup, Text, Textarea } from "@chakra-ui/react";
 import Axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import { API_URL } from "../helper";
 import { CgCloseO } from "react-icons/cg";
 import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 
 function Profil() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { username, profile, phone, fullname, bio } = useSelector((state) => {
+    return {
+      username: state.userReducer.username,
+      profile: state.userReducer.profile,
+      phone: state.userReducer.phone,
+      fullname: state.userReducer.fullname,
+      bio: state.userReducer.bio,
+    };
+  });
+
   const [selecImg, setSelectImg] = useState(null);
-  const [fullname, setFullname] = useState("");
-  const [bio, setBio] = useState("");
+  const [fullnameinput, setFullnameInput] = useState("");
+  const [bioinput, setBioInput] = useState("");
 
   const onBtnSave = async () => {
     try {
@@ -29,26 +42,30 @@ function Profil() {
     }
   };
 
-  const btnfullname = () => {
-    let token = localStorage.getItem("socialmediafb");
-    Axios.patch(API_URL + `/users/fullname`, {
-      fullname,
-      Authorization: `Bearer ${token}`,
-    })
-      .then(() => {
-        alert("update fullname success");
-      })
-      .catch((err) => {
-        console.log(err);
+  const onbtnfullname = async () => {
+    try {
+      let token = localStorage.getItem("socialmediafb");
+      let res = await Axios.patch(API_URL + `/users/fullname`, fullnameinput, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
+      if (res.data.success) {
+        alert(res.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const btnBio = () => {
-    Axios.patch(API_URL + `/users/bio`, {
+  const onbtnprofileUpdate = () => {
+    Axios.patch(API_URL + "/users/editprofile", {
+      fullname,
       bio,
     })
-      .then(() => {
-        alert("update bio success");
+      .then((response) => {
+        console.log(response.data);
+        alert("update profile berhasil");
       })
       .catch((err) => {
         console.log(err);
@@ -70,13 +87,8 @@ function Profil() {
           <p>FullName</p>
         </Text>
         <InputGroup>
-          <Input
-            placeholder="Input Fullname"
-            onChange={(e) => {
-              setFullname(e.target.value);
-            }}
-          />
-          <Button type="button" onClick={btnfullname}>
+          <Input placeholder="Input Fullname" onChange={(e) => setFullnameInput(e.target.value)} />
+          <Button type="button" onClick={onbtnfullname}>
             Save
           </Button>
         </InputGroup>
@@ -84,8 +96,7 @@ function Profil() {
         <Text as="b" fontSize="xl" className="d-flex justify-content-start py-3">
           <p>Foto Profile</p>
         </Text>
-
-        <Avatar name="Profile" size="2xl" className="my-3" />
+        <Avatar name="Profile" size="2xl" className="my-3" src={API_URL + profile} />
         <InputGroup className="align-items-end">
           <Input type="file" onChange={(e) => setSelectImg(e.target.files[0])} />
           <Button type="button" onClick={onBtnSave}>
@@ -96,15 +107,8 @@ function Profil() {
           <p>Bio</p>
         </Text>
         <InputGroup>
-          <Textarea
-            placeholder="Ceritakan tentang diri Anda...."
-            onChange={(e) => {
-              setBio(e.target.value);
-            }}
-          />
-          <Button type="button" onClick={btnBio}>
-            Save
-          </Button>
+          <Textarea placeholder="Ceritakan tentang diri Anda...." onChange={(e) => setBioInput(e.target.value)} />
+          <Button type="button">Save</Button>
         </InputGroup>
 
         <div className=" d-flex justify-content-center py-3">
@@ -112,7 +116,9 @@ function Profil() {
         </div>
 
         <Text className="p-3 d-flex justify-content-center">Unggulkan foto dan cerita favorit Anda di sini untuk dilihat semua teman.</Text>
-        <Button className="w-100">Edit Info Tentang Anda</Button>
+        <Button className="w-100" onClick={onbtnprofileUpdate}>
+          Edit Info Tentang Anda
+        </Button>
       </Container>
     </div>
   );

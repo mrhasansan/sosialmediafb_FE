@@ -31,8 +31,8 @@ function VerificationPage() {
   };
   return (
     <div>
-      <p className="h1 my-3"> Verifie your acount!</p>
-      <Button style={{ background: "#FFFFFF", borderRadius: "5px" }} onClick={confirmBtn}>
+      <p className="h1 my-3"> Verifie your acount Now!</p>
+      <Button style={{ borderRadius: "5px" }} onClick={confirmBtn}>
         VERIFIED
       </Button>
     </div>

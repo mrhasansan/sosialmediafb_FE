@@ -15,28 +15,26 @@ function Home() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [getuserbyId, setGetUserbyId] = useState([]);
-
-  const { username } = useSelector((state) => {
+  const { username, profile, phone, fullname, bio, email } = useSelector((state) => {
     return {
       username: state.userReducer.username,
+      profile: state.userReducer.profile,
+      phone: state.userReducer.phone,
+      fullname: state.userReducer.fullname,
+      bio: state.userReducer.bio,
+      email: state.userReducer.email,
     };
   });
-  useEffect(() => {
-    Axios.get(API_URL + "/users/id").then((response) => {
-      setGetUserbyId(response.data);
-    });
-  }, []);
 
   return (
     <>
       <Navbar />
       <Row className="my-4 pt-5 d-flex justify-content-start mx-5 px-5 " style={{ background: "#FFFFFF" }}>
-        <Avatar name="Profile" size="2xl" className="my-3" />
+        <Avatar name="Profile" size="2xl" className="my-3" src={API_URL + profile} />
         <Text as="b" className="d-flex justify-content-start">
           {username}
         </Text>
-        getuserbyId
+        {bio}
         <Divider />
       </Row>
       <Row className="my-4 p-5 d-flex justify-content-center " style={{ background: "#F0F2F5" }}>
@@ -53,19 +51,13 @@ function Home() {
               <div>
                 <FaUserCircle size={24} className="me-2" color="#8190A3" />
               </div>
-              <div className="mx-3">fullname</div>
+              <div className="mx-3">{fullname}</div>
             </li>
             <li className="d-flex my-3 align-items-center">
               <div>
                 <HiOutlineMailOpen size={24} className="me-2" color="#8190A3" />
               </div>
-              <div className="mx-3">email</div>
-            </li>
-            <li className="d-flex my-3 align-items-center">
-              <div>
-                <BiOutline size={24} className="me-2" color="#8190A3" />
-              </div>
-              <div className="mx-3">Bio</div>
+              <div className="mx-3">{email}</div>
             </li>
             <li className="d-flex my-3 align-items-center">
               <div>

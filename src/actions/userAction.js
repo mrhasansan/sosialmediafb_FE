@@ -1,3 +1,5 @@
+import Axios from "axios";
+
 export const loginAction = (data) => {
   console.log("data from component==>", data);
   return {

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-
 import { Container, Card, CardHeader, Flex, Avatar, Box, Text, IconButton, CardBody, Image, Button, Heading, CardFooter, Input, Textarea, Divider, Select } from "@chakra-ui/react";
 import { API_URL } from "../helper";
 import { BiStore, BiLike, BiShare, BiChat } from "react-icons/bi";
@@ -21,10 +20,13 @@ function Content() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { username } = useSelector((state) => {
-    //mengambil username dari reducer login
+  const { username, profile, phone, fullname, bio } = useSelector((state) => {
     return {
       username: state.userReducer.username,
+      profile: state.userReducer.profile,
+      phone: state.userReducer.phone,
+      fullname: state.userReducer.fullname,
+      bio: state.userReducer.bio,
     };
   });
 
@@ -33,7 +35,7 @@ function Content() {
       let token = localStorage.getItem("socialmediafb");
       const formData = new FormData(); //constructur js untuk pengambilan file data
       formData.append("images", selecImg);
-      let res = await Axios.patch(API_URL + `/content/profile`, formData, {
+      let res = await Axios.post(API_URL + `/content/imgstatus`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -52,6 +54,7 @@ function Content() {
       numlike,
       description,
       comment,
+      selecImg,
     })
       .then((response) => {
         console.log(response.data);
@@ -62,23 +65,20 @@ function Content() {
       });
   };
 
-  const likePost = (id, key) => {
-    let tempLikes = upload;
-    tempLikes[key].likes = tempLikes[key].likes + 1;
-  };
   return (
     <div>
       <Container className="my-3" style={{ background: "#FFFFFF", borderRadius: "10px" }}>
-        <Text as="b" className="my-3 h5  ">
-          Buat Postingan
+        <Text as="b" className="my-3 h5 d-flex justify-content-between ">
+          <p>Buat Postingan</p>
+          <Link to="/">
+            <CgCloseO size={28} />
+          </Link>
         </Text>
-        <Link to="/">
-          <CgCloseO size={28} />
-        </Link>
+
         <Divider className="my-3" />
 
         <Flex flex="1" gap="4" alignItems="center" flexWrap="wrap">
-          <Avatar name="Segun Adebayo" src="https://bit.ly/sage-adebayo" />
+          <Avatar name="Segun Adebayo" src={API_URL + profile} />
 
           <Box>
             <Heading size="sm">{username}</Heading>

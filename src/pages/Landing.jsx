@@ -18,11 +18,13 @@ function Landing() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const time = Date.now();
-
-  const { username } = useSelector((state) => {
+  const { username, profile, phone, fullname, bio } = useSelector((state) => {
     return {
       username: state.userReducer.username,
+      profile: state.userReducer.profile,
+      phone: state.userReducer.phone,
+      fullname: state.userReducer.fullname,
+      bio: state.userReducer.bio,
     };
   });
   const [upload, setUpload] = useState([]);
@@ -39,7 +41,7 @@ function Landing() {
           <ul className="list-unstyled mx-3">
             <li className="d-flex my-3 align-items-center">
               <div>
-                <Avatar className="me-2" color="#8190A3" />
+                <Avatar className="me-2" size="md" name={username} src={API_URL + profile} />
               </div>
               <div className="m-3">{username}</div>
             </li>
@@ -146,7 +148,7 @@ function Landing() {
                   <CardBody>
                     <Text>{val.description}</Text>
                   </CardBody>
-                  <Image objectFit="cover" src="https://images.unsplash.com/photo-1531403009284-440f080d1e12?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" alt="Chakra UI" />
+                  {/* <Image objectFit="cover" alt="Chakra UI" /> */}
                   <CardFooter
                     justify="space-between"
                     flexWrap="wrap"

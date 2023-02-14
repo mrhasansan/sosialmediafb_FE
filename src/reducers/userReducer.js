@@ -1,6 +1,9 @@
 const INITIAL_STATE = {
   username: "",
   authenticated: false,
+  phone: "",
+  fullname: "",
+  profile: "",
 };
 
 export const userReducer = (state = INITIAL_STATE, action) => {

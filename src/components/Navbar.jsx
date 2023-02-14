@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Nav, NavItem, NavLink } from "reactstrap";
 import { BsFacebook } from "react-icons/bs";
 import { ImSearch } from "react-icons/im";
@@ -10,7 +10,7 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { MdNotificationsNone, MdSettings } from "react-icons/md";
 import { Avatar, Spinner, AvatarBadge, MenuButton, Menu, MenuList, MenuItem, MenuDivider } from "@chakra-ui/react";
 import { logoutAction } from "../actions/userAction";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { GoSignOut } from "react-icons/go";
 import Axios from "axios";
@@ -20,11 +20,22 @@ function Navbar(props) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { username } = useSelector((state) => {
+  const { username, profile, phone, fullname, bio } = useSelector((state) => {
     return {
       username: state.userReducer.username,
+      profile: state.userReducer.profile,
+      phone: state.userReducer.phone,
+      fullname: state.userReducer.fullname,
+      bio: state.userReducer.bio,
     };
   });
+
+  const [upload, setUpload] = useState([]);
+  useEffect(() => {
+    Axios.get(API_URL + "/users").then((response) => {
+      setUpload(response.data);
+    });
+  }, []);
 
   return (
     <div>
@@ -82,7 +93,7 @@ function Navbar(props) {
         </NavItem>
         <Menu>
           <MenuButton type="button">
-            <Avatar size="md" name={username}>
+            <Avatar size="md" name={username} src={API_URL + profile}>
               <AvatarBadge boxSize="1em" bg="green.500" />
             </Avatar>
           </MenuButton>
@@ -107,7 +118,7 @@ function Navbar(props) {
               </NavLink>
             </MenuItem>
             <MenuItem onClick={() => dispatch(logoutAction())}>
-              <NavLink style={{ color: "black" }} className="ps-0">
+              <NavLink style={{ color: "black" }} className="ps-0" href="/login">
                 <GoSignOut className="d-inline m-0" size={24} />
                 <span className="m-2">Logout</span>
               </NavLink>
