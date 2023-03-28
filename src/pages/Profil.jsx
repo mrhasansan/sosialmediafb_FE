@@ -4,12 +4,15 @@ import Axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import { API_URL } from "../helper";
 import { CgCloseO } from "react-icons/cg";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 function Profil() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { id } = useParams();
+  // console.log("params", id); // cek params router dalam bnetuk objek
+
   const { username, profile, phone, fullname, bio } = useSelector((state) => {
     return {
       username: state.userReducer.username,
@@ -29,6 +32,7 @@ function Profil() {
       let token = localStorage.getItem("socialmediafb");
       const formData = new FormData(); //constructur js untuk pengambilan file data
       formData.append("images", selecImg);
+      formData.append("data", JSON.stringify({ fullnameinput, bioinput }));
       let res = await Axios.patch(API_URL + `/users/profile`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -42,39 +46,10 @@ function Profil() {
     }
   };
 
-  const onbtnfullname = async () => {
-    try {
-      let token = localStorage.getItem("socialmediafb");
-      let res = await Axios.patch(API_URL + `/users/fullname`, fullnameinput, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (res.data.success) {
-        alert(res.data.message);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const onbtnprofileUpdate = () => {
-    Axios.patch(API_URL + "/users/editprofile", {
-      fullname,
-      bio,
-    })
-      .then((response) => {
-        console.log(response.data);
-        alert("update profile berhasil");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
   return (
-    <div>
+    <form>
       <Container className="my-4 ">
+        <h1> params Id : {id}</h1>;
         <Text as="b" fontSize="xl" className="d-flex justify-content-between">
           <p> Edit Profile</p>
           <Link to="/">
@@ -82,17 +57,12 @@ function Profil() {
           </Link>
         </Text>
         <Divider />
-
         <Text as="b" fontSize="xl" className="d-flex justify-content-start py-3">
           <p>FullName</p>
         </Text>
         <InputGroup>
           <Input placeholder="Input Fullname" onChange={(e) => setFullnameInput(e.target.value)} />
-          <Button type="button" onClick={onbtnfullname}>
-            Save
-          </Button>
         </InputGroup>
-
         <Text as="b" fontSize="xl" className="d-flex justify-content-start py-3">
           <p>Foto Profile</p>
         </Text>
@@ -108,19 +78,16 @@ function Profil() {
         </Text>
         <InputGroup>
           <Textarea placeholder="Ceritakan tentang diri Anda...." onChange={(e) => setBioInput(e.target.value)} />
-          <Button type="button">Save</Button>
         </InputGroup>
-
         <div className=" d-flex justify-content-center py-3">
           <img src="https://static.xx.fbcdn.net/rsrc.php/v3/y7/r/alK0zaYLJgf.png?_nc_eui2=AeE0zWoSQpPvCvphFP01PR2LZL8hx3oBInNkvyHHegEicwk10BpmDHJQw1eKTKxXNQYMkX2i4hd9W2C3HrLZN4LV" alt="" style={{ width: "334px", height: "192px" }} />
         </div>
-
         <Text className="p-3 d-flex justify-content-center">Unggulkan foto dan cerita favorit Anda di sini untuk dilihat semua teman.</Text>
-        <Button className="w-100" onClick={onbtnprofileUpdate}>
-          Edit Info Tentang Anda
+        <Button className="w-100" onClick={onBtnSave}>
+          Update Profile
         </Button>
       </Container>
-    </div>
+    </form>
   );
 }
 

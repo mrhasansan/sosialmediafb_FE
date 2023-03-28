@@ -12,10 +12,7 @@ import { CgCloseO } from "react-icons/cg";
 
 function Content() {
   const [description, setDescription] = useState("");
-  const [numlike, setNumlike] = useState(0);
-  const [comment, setComment] = useState("");
   const [selecImg, setSelectImg] = useState(null);
-  const [upload, setUpload] = useState([]);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -35,7 +32,8 @@ function Content() {
       let token = localStorage.getItem("socialmediafb");
       const formData = new FormData(); //constructur js untuk pengambilan file data
       formData.append("images", selecImg);
-      let res = await Axios.post(API_URL + `/content/imgstatus`, formData, {
+      formData.append("data", { description });
+      let res = await Axios.post(API_URL + `/content/status`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -46,23 +44,6 @@ function Content() {
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const upContent = () => {
-    Axios.post(API_URL + `/content/status`, {
-      username,
-      numlike,
-      description,
-      comment,
-      selecImg,
-    })
-      .then((response) => {
-        console.log(response.data);
-        alert("update postingan berhasil");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
   };
 
   return (
@@ -97,12 +78,9 @@ function Content() {
 
         <InputGroup className="align-items-end">
           <Input type="file" onChange={(e) => setSelectImg(e.target.files[0])} />
-          <Button type="button" onClick={onBtnSave}>
-            Save
-          </Button>
         </InputGroup>
 
-        <Button onClick={upContent} className="w-100 my-3">
+        <Button className="w-100 my-3" onClick={onBtnSave}>
           Kirim
         </Button>
       </Container>

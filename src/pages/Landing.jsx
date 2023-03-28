@@ -9,7 +9,7 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { RiVideoAddFill } from "react-icons/ri";
 import { SlPresent } from "react-icons/sl";
 import Navbar from "../components/Navbar";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import Axios from "axios";
 import { API_URL } from "../helper";
@@ -17,6 +17,8 @@ import { API_URL } from "../helper";
 function Landing() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const { id } = useParams();
 
   const { username, profile, phone, fullname, bio } = useSelector((state) => {
     return {
@@ -28,15 +30,30 @@ function Landing() {
     };
   });
   const [upload, setUpload] = useState([]);
-  useEffect(() => {
-    Axios.get(API_URL + "/content").then((response) => {
+
+  const getContent = () => {
+    Axios.get(API_URL + `/content`).then((response) => {
       setUpload(response.data);
     });
-  }, []);
+  };
+
+  const [newcomment, setNewComment] = useState("");
+
+  const btncomment = (id) => {
+    Axios.put(API_URL + `/comment`, { comment: newcomment, id: id }).then((response) => {
+      setUpload(
+        upload.map((val) => {
+          return val.id == id ? { id: val.id, comment: newcomment } : val;
+        })
+      );
+    });
+  };
   return (
     <>
       <Navbar />
-      <Row className="my-4 p-5  " style={{ overflowY: "scroll" }}>
+      <h1> params id from API : {id}</h1>
+
+      <Row className="mt-4  p-0 " style={{ overflowY: "scroll" }}>
         <Col md="3" style={{ background: "#F0F2F5" }}>
           <ul className="list-unstyled mx-3">
             <li className="d-flex my-3 align-items-center">
@@ -103,15 +120,13 @@ function Landing() {
             </Tabs>
             <Stack direction="row">
               <Image boxSize="150px" objectFit="cover" src="https://bit.ly/dan-abramov" alt="Dan Abramov" />
-              <Image boxSize="150px" objectFit="cover" src="https://bit.ly/dan-abramov" alt="Dan Abramov" />
-              <Image boxSize="150px" objectFit="cover" src="https://bit.ly/dan-abramov" alt="Dan Abramov" />
             </Stack>
           </Container>
 
           <Container style={{ background: "#FFFFFF", borderRadius: "10px" }} className="my-3 pt-3">
-            <Link to="/content">
+            <Text to="/content">
               <Button className="w-100 my-3"> Apa yang anda pikirkan, {username} ?</Button>
-            </Link>
+            </Text>
 
             <Divider orientation="horizontal" />
             <Link to="/content">
@@ -127,9 +142,10 @@ function Landing() {
               </Button>
             </Link>
           </Container>
-          {upload.map((val, key) => {
+          <Button onClick={getContent}>Getcontennt</Button>
+          {upload.map((val, i) => {
             return (
-              <Container className="my-3 py-3 " style={{ background: "#FFFFFF", borderRadius: "10px" }}>
+              <Container key={val.id} className="my-3 py-3 " style={{ background: "#FFFFFF", borderRadius: "10px" }}>
                 <Card>
                   <CardHeader>
                     <Flex spacing="4">
@@ -137,7 +153,7 @@ function Landing() {
                         <Avatar name="Segun Adebayo" src="https://bit.ly/sage-adebayo" />
 
                         <Box>
-                          <Heading size="sm">{val.username}</Heading>
+                          <Heading size="sm"> {val.username}</Heading>
 
                           <Text>{val.createdate}</Text>
                         </Box>
@@ -163,13 +179,15 @@ function Landing() {
                       Like
                       <p className="m-2">{val.numlike}</p>
                     </Button>
-                    <Button flex="1" variant="ghost" leftIcon={<BiChat />}>
-                      Comment
-                    </Button>
                     <Button flex="1" variant="ghost" leftIcon={<BiShare />}>
                       Share
                     </Button>
-                    <Divider />
+                    <Button flex="1" variant="ghost" leftIcon={<BiChat onClick={() => btncomment(val.id)} />}>
+                      Comment
+                    </Button>
+                    <Input type="text" placeholder="comment...." onChange={(e) => setNewComment(e.target.value)} />
+
+                    <Divider className="my-3" />
                   </CardFooter>
                 </Card>
                 <Container className="my-3" style={{ background: "#F0F2F5", borderRadius: "10px" }}>
@@ -211,7 +229,7 @@ function Landing() {
             <Text as="b" className="d-flex my-3 align-items-center">
               Kontak
             </Text>
-            <ul list-unstyled mx-3>
+            <ul>
               <li className="d-flex my-3 align-items-center">
                 <div>
                   <Avatar size="sm" className="me-2" color="#8190A3" />

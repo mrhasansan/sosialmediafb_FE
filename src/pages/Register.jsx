@@ -10,7 +10,7 @@ import Axios from "axios";
 import { API_URL } from "../helper";
 
 function Register() {
-  const [show, setShow] = React.useState(false);
+  const [show, setShow] = useState(false);
   const handleClick = () => setShow(!show);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");

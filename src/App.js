@@ -53,7 +53,8 @@ function App() {
         <Route path="/" element={<Landing />} />
         <Route path="/profile" element={<Profil />} />
         <Route path="/content" element={<Content />} />
-        <Route path="/home" element={<Home />} />
+        <Route path="/home" element={<Home />}></Route>
+        <Route />
       </Routes>
     </div>
   );

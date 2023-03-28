@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Nav, NavItem, NavLink } from "reactstrap";
+import { Input, Nav, NavItem, NavLink } from "reactstrap";
 import { BsFacebook } from "react-icons/bs";
 import { ImSearch } from "react-icons/im";
 import { AiFillHome, AiOutlinePlusCircle } from "react-icons/ai";
@@ -48,7 +48,7 @@ function Navbar(props) {
         </NavItem>
         <NavItem>
           <NavLink href="#">
-            <ImSearch size={28} />
+            <Input placeholder="Search.." />
           </NavLink>
         </NavItem>
         <NavItem>
@@ -99,7 +99,7 @@ function Navbar(props) {
           </MenuButton>
           <MenuList>
             <MenuItem>
-              <NavLink style={{ color: "black" }} onClick={() => navigate(`/profile`)} className="ps-0">
+              <NavLink style={{ color: "black" }} onClick={() => navigate(`/home`)} className="ps-0">
                 <FaUserCog className="d-inline m-0" size={24} />
                 <span className="m-2"> {username}</span>
               </NavLink>

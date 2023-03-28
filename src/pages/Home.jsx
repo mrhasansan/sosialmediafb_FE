@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import { Row, Col, Container } from "reactstrap";
 import { Tab, TabList, Tabs, Image, Button, Text, Card, CardHeader, Flex, Avatar, Heading, Box, CardBody, IconButton, CardFooter, AvatarBadge, Divider } from "@chakra-ui/react";
-import { MdOutlineOndemandVideo, MdOutlineHistory, MdUpdate, MdVideoCameraFront } from "react-icons/md";
+import { MdOutlineOndemandVideo, MdOutlineHistory, MdModeEditOutline, MdVideoCameraFront } from "react-icons/md";
 import { FaUserFriends, FaBookOpen, FaYoutube, FaPhotoVideo, FaHome, FaUserCircle } from "react-icons/fa";
 import { HiUserGroup, HiOutlineAcademicCap, HiOutlineRss, HiOutlineMailOpen } from "react-icons/hi";
 import { BiStore, BiLike, BiShare, BiChat, BiTimeFive, BiOutline } from "react-icons/bi";
@@ -29,12 +29,23 @@ function Home() {
   return (
     <>
       <Navbar />
-      <Row className="my-4 pt-5 d-flex justify-content-start mx-5 px-5 " style={{ background: "#FFFFFF" }}>
-        <Avatar name="Profile" size="2xl" className="my-3" src={API_URL + profile} />
-        <Text as="b" className="d-flex justify-content-start">
-          {username}
-        </Text>
-        {bio}
+      <Row className="my-4 pt-5 mx-5 px-5 " style={{ background: "#FFFFFF" }}>
+        <Container className="d-flex justify-content-between align-items-top">
+          <Avatar name="Profile" size="2xl" className="my-3" src={API_URL + profile} />
+          <Container className="d-flex align-items-start flex-column">
+            <Text as="b" className="d-block h4">
+              {username}
+            </Text>
+            <Text>{bio}</Text>
+          </Container>
+
+          <Link to="/profile" className="w-25">
+            <Button>
+              <MdModeEditOutline />
+              <span className="m-2"> Edit Profile</span>
+            </Button>
+          </Link>
+        </Container>
         <Divider />
       </Row>
       <Row className="my-4 p-5 d-flex justify-content-center " style={{ background: "#F0F2F5" }}>
@@ -128,45 +139,6 @@ function Home() {
                     <Box>
                       <Heading size="sm">Hasansan</Heading>
                       <Text>Chemistry lLovers</Text>
-                    </Box>
-                  </Flex>
-                  <IconButton variant="ghost" colorScheme="gray" aria-label="See menu" icon={<BsThreeDotsVertical />} />
-                </Flex>
-              </CardHeader>
-              <CardBody>
-                <Text> Belajar di Purwadhika harus bekerja keras agar bisa lulus</Text>
-              </CardBody>
-              <Image objectFit="cover" src="https://images.unsplash.com/photo-1531403009284-440f080d1e12?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" alt="Chakra UI" />
-              <CardFooter
-                justify="space-between"
-                flexWrap="wrap"
-                sx={{
-                  "& > button": {
-                    minW: "136px",
-                  },
-                }}
-              >
-                <Button flex="1" variant="ghost" leftIcon={<BiLike />}>
-                  Like
-                </Button>
-                <Button flex="1" variant="ghost" leftIcon={<BiChat />}>
-                  Comment
-                </Button>
-                <Button flex="1" variant="ghost" leftIcon={<BiShare />}>
-                  Share
-                </Button>
-              </CardFooter>
-            </Card>
-          </Container>
-          <Container className="my-3 p-3 d-flex justify-content-center" style={{ background: "#FFFFFF", borderRadius: "10px" }}>
-            <Card maxW="md">
-              <CardHeader>
-                <Flex spacing="4">
-                  <Flex flex="1" gap="4" alignItems="center" flexWrap="wrap">
-                    <Avatar name="Segun Adebayo" src="https://bit.ly/sage-adebayo" />
-                    <Box>
-                      <Heading size="sm">Hasan</Heading>
-                      <Text>Chemistry Lovers</Text>
                     </Box>
                   </Flex>
                   <IconButton variant="ghost" colorScheme="gray" aria-label="See menu" icon={<BsThreeDotsVertical />} />
